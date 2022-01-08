@@ -1,45 +1,47 @@
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
     const requestApproval = sequelize.define("requestApproval", {
         requestID: {
-            type: DataTypes.INTEGER(5),
+            type: Sequelize.INTEGER(5),
             allowNull: false,
             validate: { notEmpty: true },
             primaryKey: true,
             autoIncrement: true,
         },
         requestDate: {
-            type: DataTypes.DATE,
+            type: Sequelize.DATE,
             allowNull: false,
         },
         adminApproval: {
-            type: DataTypes.INTEGER(1),
+            type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
         },
         approvalDate: {
-            type: DataTypes.DATE,
+            type: Sequelize.DATE,
             allowNull: true,
         },
         companyName: {
-            type: DataTypes.STRING(250),
+            type: Sequelize.STRING(250),
             allowNull: false,
         },
         companyBrief: {
-            type: DataTypes.STRING(500),
+            type: Sequelize.STRING(500),
             allowNull: false,
         },
         turnOver: {
-            type: DataTypes.FLOAT,
+            type: Sequelize.FLOAT,
             allowNull: false
         },
         salesVolume: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: Sequelize.INTEGER,
+            allowNull: false,
         },
-        email: {
-            type: DataTypes.STRING(50),
+       email: {
+            type: Sequelize.STRING(50),
             //foreignKey: true,
             allowNull: false,
+            unique: true,
+            validate: {isEmail: true},
         }
            },
         {

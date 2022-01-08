@@ -1,6 +1,6 @@
 const express = require('express')
 const userRoute = express.Router()
-const { userSignup, checkUserCredentials, requestApprovalFromAdmin, showProd } = require('../controller/controller.user')
+const { userSignup, checkUserCredentials, requestApprovalFromAdmin, showProd, addProduct } = require('../controller/controller.user')
 const { body } = require('express-validator');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -30,19 +30,16 @@ let comparePass = bcrypt.compareSync(hash, result.password);
 console.log('Authentication status hash:' + comparePass);
 console.log('Failure Authenticate password:      ' + hash) 
  hash the req.body.password again for testing */
-
         let isSame = bcrypt.compareSync(req.body.password, result.password);
         //console.log('Authentication status:' + isSame);
         if (isSame) {
             console.log('Authentication status:' + isSame);
             //res.status(200).send({ success: true, msg: 'Signup succeeded' })
             const token = jwt.sign({email: result.email }, process.env.TOKEN_SECRET, { algorithm: 'HS256', expiresIn: 60 * 60 })
-
             //Old method to set and send the token 
             //res.setHeader('auth_token', token).send(token)
             //New method to set and send the token
             res.send({sucess: true, token:token})
-        
         }
         else {
             
@@ -55,7 +52,10 @@ console.log('Failure Authenticate password:      ' + hash)
 
 userRoute.post('/requestAdminApproval', userVerifyToken , requestApprovalFromAdmin)
 
-userRoute.get('/showProd',userVerifyToken , showProd)
+
+userRoute.post('/showProd',userVerifyToken , showProd)
+
+userRoute.post('/addProduct', userVerifyToken , addProduct)
 
 
 module.exports = userRoute
