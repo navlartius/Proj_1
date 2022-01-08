@@ -1,6 +1,6 @@
 //module.exports = (sequelize, DataTypes) => {
     module.exports = (sequelize, Sequelize) => {
-    const prod = sequelize.define("Product", {
+    const Product = sequelize.define("Product", {
         productID: {
             type: Sequelize.INTEGER(5),
             allowNull: false,
@@ -25,16 +25,16 @@
             type: Sequelize.FLOAT,
             allowNull: false,
         },
-        email: {
+        /* email: {
             type: Sequelize.STRING(50),
             //foreignKey: true,
             allowNull: false,
-        }
+        } */
     },
         {
             freezeTableName: true
         })
 
-    return prod
+    return Product
 }
 

@@ -21,22 +21,37 @@ console.log('The config is:' + config)
 const db = {};
 
 
-let sequelize;
-if (config.use_env_variable) {
+//let sequelize;
+/* if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
   console.log('one: connected')
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-  console.log('two: connected')
-}
+} else { */
+  
+  const sequelize = new Sequelize(config.database, config.username, config.password, config);
+  //console.log('two: connected')
+  db.sequelize = sequelize;
+  db.Sequelize = Sequelize;
 
-fs
+sequelize.authenticate()
+  .then(() => {
+      console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+      console.error('Unable to connect to the database:', err);
+
+  });
+
+
+//}
+
+/* fs
   .readdirSync(__dirname)
   .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    //const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize);
     db[model.name] = model;
     console.log('model aquired: ' + model.name)
   });
@@ -44,11 +59,39 @@ fs
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
-  }
+  } */
+  
+  
+  fs.readdirSync(__dirname)
+    .filter(file => {
+        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+    }).forEach(file => {
+      console.log(file);
+        //const model = sequelize["import"](path.join(__dirname, file));
+       // const model = sequelize.import(path.join(__dirname, file));
+        //const model = sequelize.import(path.join(__dirname, file));
+        const model = require(path.join(__dirname, file))(sequelize, Sequelize);
+        console.log(model);
+        db[model.name] = model;
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
+    }
+});
+
+
+db.User.hasOne(db.requestApproval, {foreignKey: 'userID'})
+db.requestApproval.belongsTo(db.User)
+
+db.User.hasMany(db.Product)
+db.Product.belongsTo(db.User)
+
+//db.Product.hasOne(db.User)
+
+//console.log('The db object: ' , db)
 
 module.exports = db;
-module.exports = sequelize;
+
+//module.exports = sequelize;

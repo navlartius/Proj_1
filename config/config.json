@@ -5,6 +5,7 @@
     "database": "proj_1",
     "host": "localhost",
     "dialect": "mysql"
+    
   },
   "test": {
     "username": "root",
