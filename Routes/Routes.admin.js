@@ -1,6 +1,6 @@
 const express = require('express')
 const adminRoute = express.Router()
-const {viewUserApprovalRequest, approveUserRequest, rejectUserRequest,adminSignup, adminSignin, authenticateAdmin} = require('../controller/controller.admin')
+const {viewUserApprovalRequest, approveUserRequest, rejectUserRequest,adminSignup, adminSignin, authenticateAdmin, viewApprovedRequest, viewUserProduct, viewUsers, viewUsersMale, viewUsersFemale} = require('../controller/controller.admin')
 
 const { body } = require('express-validator');
 const bcrypt = require('bcrypt')
@@ -48,6 +48,17 @@ adminRoute.get('/viewRequest',adminVerifyToken,viewUserApprovalRequest )
 adminRoute.post('/approveUserRequest', adminVerifyToken, approveUserRequest)
 
 adminRoute.post('/rejectUserRequest', adminVerifyToken, rejectUserRequest)
+
+adminRoute.get('/viewApprovedRequest', viewApprovedRequest )
+
+adminRoute.get('/viewUserProduct', viewUserProduct )
+
+adminRoute.get('/viewUsers', viewUsers )
+
+adminRoute.get('/viewUsersMale', viewUsersMale )
+
+adminRoute.get('/viewUsersfeMale', viewUsersFemale )
+
 
 module.exports = adminRoute
 

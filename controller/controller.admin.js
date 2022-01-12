@@ -1,6 +1,7 @@
 // const Sequelize = require('sequelize');
 // const sequelize = require('../models')
 const db = require('../models')
+const {Sequelize, Op, QueryTypes} = require('sequelize')
 
 // db.User = require('../models/model.user')(sequelize, Sequelize);
 // db.userRequest = require('../models/model.user.request.approval')(sequelize, Sequelize);
@@ -96,5 +97,77 @@ module.exports = {
                 console.log('The error is' + err)
                 cb(err)
             })
-    }
+    },
+
+    viewApprovedRequest : (req, res)=>{
+        db.requestApproval.scope('viewApprovedRequest').findAll({
+            
+        })
+        .then((result)=>{
+            res.status(200).send({ sucess: true, Data: result})
+        })
+        .catch((err)=>{
+            res.status(400).send({ sucess: false, Error: err})
+        })
+    },
+
+    viewUserProduct: (req, res)=>{
+        db.User.scope(['viewUserProduct','userAttribute']).findAll({})
+        .then((result)=>{
+            res.status(200).send({ sucess: true, Data: result})
+        })
+        .catch((err)=>{
+            res.status(400).send({ sucess: false, Error: err})
+        })
+    },
+
+    viewUsers : (req,res)=>{
+        db.sequelize.query("select * from User", {
+            type: QueryTypes.SELECT
+        }) 
+        .then((result)=>{
+            res.status(200).send({ sucess: true, Data: result})
+        })
+        .catch((err)=>{
+            res.status(400).send({ sucess: false, Error: err})
+        })       
+
+    },
+    viewUsersMale: (req, res)=>{
+        //db.sequelize.query("select * from User where gender=:gender", {
+            db.sequelize.query("select * from User where gender= $gender", {
+            type: QueryTypes.SELECT,
+            //replacements: {gender: 'M'}
+            bind:{gender:'M'}
+        }) 
+        .then((result)=>{
+            res.status(200).send({ sucess: true, Data: result})
+        })
+        .catch((err)=>{
+            res.status(400).send({ sucess: false, Error: err})
+        })       
+    },
+    viewUsersFemale: (req,res)=>
+        {
+            // db.sequelize.query("select * from User where gender = ? ", {
+            //db.sequelize.query("select * from User where gender in (?,?)  ", {
+            //  db.sequelize.query("select * from User where gender in gender in (:gender)  ", { 
+             //db.sequelize.query("select * from User where email like :searchEmail", {      
+              
+             db.sequelize.query(`select * from User where email like ?`, {
+                    
+                type: QueryTypes.SELECT,
+            //    replacements: ['F']
+            //    replacements: ['F', 'M']
+            // replacements: {gender:['M','F']}
+            // replacements: : {searchEmail: '%yahoo%'}
+                replacements: ['%yahoo%']
+            }) 
+            .then((result)=>{
+                res.status(200).send({ sucess: true, Data: result})
+            })
+            .catch((err)=>{
+                res.status(400).send({ sucess: false, Error: err})
+            })       
+        }
 }

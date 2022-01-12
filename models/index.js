@@ -82,8 +82,8 @@ Object.keys(db).forEach(modelName => {
 });
 
 
-db.User.hasOne(db.requestApproval, {foreignKey: 'userID'})
-db.requestApproval.belongsTo(db.User)
+db.User.hasOne(db.requestApproval, {foreignKey: 'userID', allowNull:false})
+db.requestApproval.belongsTo(db.User, {foreignKey: 'userID', allowNull:false})
 
 db.User.hasMany(db.Product)
 db.Product.belongsTo(db.User)
@@ -91,6 +91,30 @@ db.Product.belongsTo(db.User)
 //db.Product.hasOne(db.User)
 
 //console.log('The db object: ' , db)
+
+
+// ----------------scope -----------------//
+
+db.requestApproval.addScope('viewApprovedRequest', {
+ // attribute: ['requestID','requestDate', 'approvalDate','statusApproval', 'userID'],
+  where:{adminApproval:1}
+})
+
+db.User.addScope('viewUserProduct', {
+  // attribute: ['requestID','requestDate', 'approvalDate','statusApproval', 'userID'],
+   include: {model: db.Product,
+    attributes:['prodDesc','prodName','prodUnitCost']}
+   
+  })
+
+  db.User.addScope('userAttribute', {
+    attributes:['firstName','lastName','email']
+
+  })
+
+  db.Product.addScope('productAttribute',{
+    attributes:['prodDesc','prodName','prodUnitCost']
+  })
 
 module.exports = db;
 

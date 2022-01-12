@@ -38,8 +38,9 @@ app.use('/docUpload', imageUploadRouter)
 //db.product.hasOne(db.user)
 
 
-db.sequelize.sync({alter:true})
+//db.sequelize.sync({alter:true})
 //db.sequelize.sync({force: true})
+db.sequelize.sync()
 
 app.listen(5000, (req,res)=>{
    console.log('Server is listening at port 5000')
