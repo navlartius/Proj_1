@@ -36,7 +36,7 @@
         gender: {
             type: Sequelize.STRING(1),
             allowNull: false,
-            validate: {isIn:[['M','.F','T']],
+            validate: {isIn:[['M','F','T']],
 
             }
         },

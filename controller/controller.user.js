@@ -3,6 +3,7 @@
 // const sequelize = require('../models/index')
 
 const db = require('../models/index')
+const {Sequelize, Op, QueryTypes} = require('sequelize')
 
 /* db.User = require('../models/model.user')(sequelize,Sequelize);
 db.prod = require('../models/model.product')(sequelize,Sequelize);
@@ -95,26 +96,25 @@ module.exports = {
                     console.log(data.companyName)
                     request = data;
                     return db.User.findOne({ where: { email: req.body.email } })
-                }).then((data) => {
+                }).then(async (data) => {
                     console.log('The UserID : ', data.userID)
                     console.log('The request ID : ', requestID)
-
-                    user = data;
+                    //user = data;
                     //user.setrequestApproval(request)
-                   db.requestApproval.update({UserUserID:data.userID},{where:{requestID: requestID}})
+                   await db.requestApproval.update({userID:data.userID},{where:{requestID: requestID}})
                         .then((result) => {
-                            res.status(200).send({ sucess: tue, msg: 'Helper method success', Data: data })
+                            res.status(200).send({ sucess: true, msg: 'Helper method success', Data: data })
                         })
                         .catch((err) => {
                             res.status(400).send({ sucess: false, msg: 'Helper method failure', Error: err })
                         })
 
-                    res.status(200).send({ sucess: tue, msg: 'Helper method success', Data: data })
+                   // res.status(200).send({ sucess: tue, msg: 'Helper method success', Data: data })
                 })
 
                 //console.log('sequelize 2', user.email)
                 .catch((err) => {
-                    res.status(400).send({ sucess: false, msg: 'Helper method failure', Error: err })
+                    res.status(400).send({ sucess: false, msg: 'Helper method outside failure', Error: err })
                 })
 
         }).catch((err) => {
@@ -181,9 +181,10 @@ module.exports = {
     showProd: (req, res, next) => {
         
         //db.prod.findAll({
+        let userid = req.body.userID    
         db.User.findAll({
             include: db.Product,
-            where: { userID: 4 }
+            where: { userID:userid }
         })
 
 
